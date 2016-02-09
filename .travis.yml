@@ -10,6 +10,7 @@ matrix:
     - php: 7.0
     - php: nightly
     - php: hhvm
+      env: IGNORE_XDEBUG=true
 
   fast_finish: true
 
@@ -17,9 +18,9 @@ matrix:
     - php: nightly
 
 before_script:
-  - phpenv config-rm xdebug.ini
+  - if [ -z IGNORE_XDEBUG ];then thenphpenv config-rm xdebug.ini; fi
   - travis_retry composer self-update
   - travis_retry composer update --prefer-dist
-  - echo 'zend_extension=xdebug.so' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - if [ -z IGNORE_XDEBUG ];then echo 'zend_extension=xdebug.so' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi
 
 script: ./test/bin/ci.bash summary
