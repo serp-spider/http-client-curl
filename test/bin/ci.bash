@@ -23,14 +23,6 @@ $SCRIPTDIR/phpcs.bash $1
 
 echo "OK"
 
-echo -e "\e[34m"
-echo "==================================="
-echo -e "= \e[1m\e[33mProcessing copy/paste detection\e[0m\e[34m ="
-echo -e "===================================\e[39m"
-
-php "$SCRIPTDIR/../../vendor/bin/phpcpd" --verbose --no-interaction "$SCRIPTDIR/../../src/"
-
-
 if [ "$PROCESS_CODECLIMATE" = true ] && [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]
 then
 
