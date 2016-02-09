@@ -25,7 +25,7 @@ echo "OK"
 
 if [ "$PROCESS_CODECLIMATE" = true ] && [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]
 then
-    phpenv config-rm xdebug.ini
+
     composer require codeclimate/php-test-reporter:dev-master
 
     echo -e "\e[34m"
