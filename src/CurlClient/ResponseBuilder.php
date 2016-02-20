@@ -17,7 +17,8 @@ class ResponseBuilder
         $rawHeaders = substr($raw, 0, $headerSize);
         $content = (strlen($raw) === $headerSize) ? '' : substr($raw, $headerSize);
 
-
+        // When a redirect response occurs, headers from all request will be appended with double \r\n
+        // We only need the last set of headers
         $rawHeaders = explode("\r\n\r\n", $rawHeaders);
         $headers = null;
         for ($i=count($rawHeaders)-1; $i>=0; $i--) {
