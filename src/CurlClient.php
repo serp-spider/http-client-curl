@@ -7,10 +7,14 @@ namespace Serps\HttpClient;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Serps\Core\Cookie\CookieJarInterface;
 use Serps\Core\Http\HttpClientInterface;
 use Serps\Core\Http\ProxyInterface;
 
+use Serps\Core\Http\SearchEngineResponse;
+use Serps\Core\UrlArchive;
 use Serps\HttpClient\CurlClient\Curl;
+use Serps\HttpClient\CurlClient\ResponseBuilder;
 use Zend\Diactoros\Response;
 
 class CurlClient implements HttpClientInterface
@@ -30,8 +34,11 @@ class CurlClient implements HttpClientInterface
     /**
      * @inheritdoc
      */
-    public function sendRequest(RequestInterface $request, ProxyInterface $proxy = null)
-    {
+    public function sendRequest(
+        RequestInterface $request,
+        ProxyInterface $proxy = null,
+        CookieJarInterface $cookieJar = null
+    ) {
         if ($proxy) {
             $proxyHost = $proxy->getIp();
             $proxyPort = $proxy->getPort();
@@ -56,14 +63,11 @@ class CurlClient implements HttpClientInterface
             $this->client->removeOption(CURLOPT_PROXYUSERPWD);
         }
 
-        $response = new Response('php://memory', 200, [
-            'X-SERPS-PROXY' => $proxy ? (string)$proxy : ''
-        ]);
+        $rawResponse = $this->client->request($request);
+        $headerSize = $this->client->getInfo(CURLINFO_HEADER_SIZE);
+        $effectiveUrl = UrlArchive::fromString($this->client->getInfo(CURLINFO_EFFECTIVE_URL));
+        $initialUrl = UrlArchive::fromString((string)$request->getUri());
 
-        $response = $this->client->request($request, $response);
-
-        $response = $response->withHeader('X-SERPS-EFFECTIVE-URL', $this->client->getInfo(CURLINFO_EFFECTIVE_URL));
-
-        return $response;
+        return ResponseBuilder::buildResponse($rawResponse, $headerSize, $initialUrl, $effectiveUrl, $proxy);
     }
 }

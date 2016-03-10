@@ -5,6 +5,7 @@
 namespace Serps\HttpClient;
 
 use Psr\Http\Message\ResponseInterface;
+use Serps\Core\Http\SearchEngineResponse;
 use Serps\HttpClient\CurlClient;
 use Zend\Diactoros\Request;
 
@@ -26,13 +27,12 @@ class CurlClientTest extends \PHPUnit_Framework_TestCase
         $request = $request->withHeader('User-Agent', 'test-user-agent');
 
         $response = $client->sendRequest($request);
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf(SearchEngineResponse::class, $response);
 
-        $responseData = json_decode($response->getBody()->__toString(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $responseData = json_decode($response->getPageContent(), true);
+        $this->assertEquals(200, $response->getHttpResponseStatus());
         $this->assertEquals('test-user-agent', $responseData['headers']['User-Agent']);
-        $this->assertCount(1, $response->getHeader('X-SERPS-EFFECTIVE-URL'));
-        $this->assertEquals('http://httpbin.org/get', $response->getHeader('X-SERPS-EFFECTIVE-URL')[0]);
+        $this->assertEquals('http://httpbin.org/get', $response->getEffectiveUrl()->buildUrl());
     }
 
     public function testRedirectRequest()
@@ -43,12 +43,12 @@ class CurlClientTest extends \PHPUnit_Framework_TestCase
         $request = $request->withHeader('User-Agent', 'test-user-agent');
 
         $response = $client->sendRequest($request);
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf(SearchEngineResponse::class, $response);
 
-        $responseData = json_decode($response->getBody()->__toString(), true);
-        $this->assertEquals(200, $response->getStatusCode());
+        $responseData = json_decode($response->getPageContent(), true);
+        $this->assertEquals(200, $response->getHttpResponseStatus());
         $this->assertEquals('test-user-agent', $responseData['headers']['User-Agent']);
-        $this->assertCount(1, $response->getHeader('X-SERPS-EFFECTIVE-URL'));
-        $this->assertEquals('http://httpbin.org/get', $response->getHeader('X-SERPS-EFFECTIVE-URL')[0]);
+        $this->assertEquals('http://httpbin.org/get', $response->getEffectiveUrl()->buildUrl());
+        $this->assertEquals('http://httpbin.org/redirect-to?url=get', $response->getInitialUrl()->buildUrl());
     }
 }

@@ -20,7 +20,7 @@ class Curl
     protected $options = [];
 
 
-    public function request(RequestInterface $request, ResponseInterface $response)
+    public function request(RequestInterface $request)
     {
 
         if (is_resource($this->handler)) {
@@ -39,8 +39,7 @@ class Curl
         if (curl_errno($this->handler) > 0) {
             throw new CurlException(curl_errno($this->handler), curl_error($this->handler), $request);
         } else {
-            $headerSize = $this->getInfo(CURLINFO_HEADER_SIZE);
-            return ResponseBuilder::buildResponse($raw, $response, $headerSize);
+            return $raw;
         }
     }
 

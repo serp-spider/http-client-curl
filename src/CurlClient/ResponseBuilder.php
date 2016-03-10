@@ -6,16 +6,26 @@
 namespace Serps\HttpClient\CurlClient;
 
 use Psr\Http\Message\ResponseInterface;
+use Serps\Core\Cookie\SetCookieString;
+use Serps\Core\Http\ProxyInterface;
+use Serps\Core\Http\SearchEngineResponse;
+use Serps\Core\UrlArchive;
 use Serps\Exception;
 
 class ResponseBuilder
 {
 
-    public static function buildResponse($raw, ResponseInterface $response, $headerSize)
-    {
+    public static function buildResponse(
+        $rawResponse,
+        $headerSize,
+        UrlArchive $initialUrl,
+        UrlArchive $effectiveUrl,
+        ProxyInterface $proxy = null
+    ) {
+    
 
-        $rawHeaders = substr($raw, 0, $headerSize);
-        $content = (strlen($raw) === $headerSize) ? '' : substr($raw, $headerSize);
+        $rawHeaders = substr($rawResponse, 0, $headerSize);
+        $content = (strlen($rawResponse) === $headerSize) ? '' : substr($rawResponse, $headerSize);
 
         // When a redirect response occurs, headers from all request will be appended with double \r\n
         // We only need the last set of headers
@@ -31,24 +41,43 @@ class ResponseBuilder
             throw new Exception('Invalid Response. No header was found');
         }
 
-        $response = self::parseHeaders($headers, $response);
 
-        $body = $response->getBody();
-        if ($body->isSeekable()) {
-            $body->rewind();
+        $data = [
+            'headers' => [],
+            'status' => null,
+            'status-text' => null
+        ];
+        self::parseHeaders($headers, $data);
+
+        $cookies = [];
+        if (isset($data['headers']['SetCookie'])) {
+            foreach ($data['headers']['SetCookie'] as $setCookieString) {
+                $cookies[] =SetCookieString::parse(
+                    $setCookieString,
+                    $effectiveUrl->getHost(),
+                    $effectiveUrl->getPath()
+                );
+            }
         }
-        $body->write($content);
 
-        return $response;
+        return new SearchEngineResponse(
+            $data['headers'],
+            $data['status'],
+            $content,
+            false,
+            $initialUrl,
+            $effectiveUrl,
+            $cookies,
+            $proxy
+        );
     }
 
     /**
      * Parses headers from a raw header string
      * @param array $headers
-     * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public static function parseHeaders(array $headers, ResponseInterface $response)
+    public static function parseHeaders(array $headers, &$data)
     {
 
         $statusLine = trim(array_shift($headers));
@@ -56,11 +85,11 @@ class ResponseBuilder
         if (count($parts) < 2 || substr(strtolower($parts[0]), 0, 5) !== 'http/') {
             throw new \RuntimeException($statusLine . 'is not a valid HTTP status line');
         }
-        $reasonPhrase = count($parts) > 2 ? $parts[2] : '';
-        /** @var ResponseInterface $response */
-        $response = $response
-            ->withStatus((int) $parts[1], $reasonPhrase)
-            ->withProtocolVersion(substr($parts[0], 5));
+
+        $data['status'] = (int) $parts[1];
+        $data['status-text'] =  count($parts) > 2 ? $parts[2] : '';
+
+        // $protocolVersion = substr($parts[0], 5));
 
         foreach ($headers as $headerLine) {
             $headerLine = trim($headerLine);
@@ -73,12 +102,7 @@ class ResponseBuilder
             }
             $name = trim(urldecode($parts[0]));
             $value = trim(urldecode($parts[1]));
-            if ($response->hasHeader($name)) {
-                $response = $response->withAddedHeader($name, $value);
-            } else {
-                $response = $response->withHeader($name, $value);
-            }
+            $data['headers'][$name][] = $value;
         }
-        return $response;
     }
 }
