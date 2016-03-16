@@ -6,6 +6,7 @@
 namespace Serps\HttpClient\CurlClient;
 
 use Psr\Http\Message\ResponseInterface;
+use Serps\Core\Cookie\CookieJarInterface;
 use Serps\Core\Cookie\SetCookieString;
 use Serps\Core\Http\ProxyInterface;
 use Serps\Core\Http\SearchEngineResponse;
@@ -20,7 +21,8 @@ class ResponseBuilder
         $headerSize,
         UrlArchive $initialUrl,
         UrlArchive $effectiveUrl,
-        ProxyInterface $proxy = null
+        ProxyInterface $proxy = null,
+        CookieJarInterface $cookieJar = null
     ) {
     
 
@@ -49,14 +51,13 @@ class ResponseBuilder
         ];
         self::parseHeaders($headers, $data);
 
-        $cookies = [];
-        if (isset($data['headers']['SetCookie'])) {
+        if ($cookieJar && isset($data['headers']['SetCookie'])) {
             foreach ($data['headers']['SetCookie'] as $setCookieString) {
-                $cookies[] =SetCookieString::parse(
+                $cookieJar->set(SetCookieString::parse(
                     $setCookieString,
                     $effectiveUrl->getHost(),
                     $effectiveUrl->getPath()
-                );
+                ));
             }
         }
 
@@ -67,7 +68,6 @@ class ResponseBuilder
             false,
             $initialUrl,
             $effectiveUrl,
-            $cookies,
             $proxy
         );
     }

@@ -63,11 +63,36 @@ class CurlClient implements HttpClientInterface
             $this->client->removeOption(CURLOPT_PROXYUSERPWD);
         }
 
+        if ($cookieJar) {
+            $cookieFileData = CookieFile::generate($cookieJar->all());
+
+            $cookieFile = tempnam(sys_get_temp_dir(), 'serps_curlcookie');
+            file_put_contents($cookieFile, $cookieFileData);
+
+            $cookieJarFile = tempnam(sys_get_temp_dir(), 'serps_curlcookiejar');
+
+            $this->client->setOption(CURLOPT_COOKIEFILE, $cookieFile);
+            $this->client->setOption(CURLOPT_COOKIEJAR, $cookieJarFile);
+        } else {
+            $this->client->removeOption(CURLOPT_COOKIEFILE);
+            $this->client->removeOption(CURLOPT_COOKIEJAR);
+        }
+
         $rawResponse = $this->client->request($request);
         $headerSize = $this->client->getInfo(CURLINFO_HEADER_SIZE);
         $effectiveUrl = UrlArchive::fromString($this->client->getInfo(CURLINFO_EFFECTIVE_URL));
         $initialUrl = UrlArchive::fromString((string)$request->getUri());
 
-        return ResponseBuilder::buildResponse($rawResponse, $headerSize, $initialUrl, $effectiveUrl, $proxy);
+        $this->client->close();
+
+        if ($cookieJar) {
+            $cookieJarData = file_get_contents($cookieJarFile);
+            $cookies = CookieFile::parse($cookieJarData);
+            foreach ($cookies as $cookie) {
+                $cookieJar->set($cookie);
+            }
+        }
+
+        return ResponseBuilder::buildResponse($rawResponse, $headerSize, $initialUrl, $effectiveUrl, $proxy, $cookieJar);
     }
 }
