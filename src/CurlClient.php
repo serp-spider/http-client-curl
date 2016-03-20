@@ -93,6 +93,13 @@ class CurlClient implements HttpClientInterface
             }
         }
 
-        return ResponseBuilder::buildResponse($rawResponse, $headerSize, $initialUrl, $effectiveUrl, $proxy, $cookieJar);
+        return ResponseBuilder::buildResponse(
+            $rawResponse,
+            $headerSize,
+            $initialUrl,
+            $effectiveUrl,
+            $proxy,
+            $cookieJar
+        );
     }
 }
