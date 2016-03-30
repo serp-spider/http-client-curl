@@ -15,7 +15,7 @@ Install
 Install it through [composer](https://getcomposer.org/) with the package 
 [serps/http-client-curl](https://packagist.org/packages/serps/http-client-curl) : ``composer require 'serps/http-client-curl'``
 
-Doc
----
+Documentation
+-------------
 
-Todo
+[Browse the documentation](http://serp-spider.github.io/documentation/http-client/curl/)
