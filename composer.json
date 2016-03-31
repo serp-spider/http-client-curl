@@ -31,7 +31,7 @@
 
   "require": {
     "php": ">=5.5",
-    "serps/serps": "dev-master"
+    "serps/core": "dev-master"
   },
 
   "scripts": {
