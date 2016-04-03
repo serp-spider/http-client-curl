@@ -21,7 +21,9 @@ class CurlException extends Exception
     {
         $this->curlErr = $curlErr;
         $this->curlMessage = $curlMessage;
-        parent::__construct('Curl was unable to process the request. Error code:' . $curlErr);
+        parent::__construct(
+            'Curl was unable to process the request. Error code:' . $curlErr . '. Message : "' . $curlMessage . '""'
+        );
     }
 
     /**
