@@ -65,7 +65,7 @@ class CookieFile
             $cookies[] = new Cookie($cookieData[5], $cookieData[6], [
                 'domain' => $cookieData[0],
                 'path'   => $cookieData[2],
-                'secure' => $cookieData[3] == 'TRUE',
+                'secure' => $cookieData[3] == true,
                 'expire' => $cookieData[4],
                 'http_only' => $httpOnly,
             ]);
