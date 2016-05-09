@@ -62,11 +62,10 @@ class CookieFile
             }
             $cookieData = trim($cookieData);
             $cookieData = explode("\t", $cookieData);
-            var_dump('secure', $cookieData[3], $cookieData[3] == true);
             $cookies[] = new Cookie($cookieData[5], $cookieData[6], [
                 'domain' => $cookieData[0],
                 'path'   => $cookieData[2],
-                'secure' => $cookieData[3] == true,
+                'secure' => $cookieData[3] == 'TRUE',
                 'expire' => $cookieData[4],
                 'http_only' => $httpOnly,
             ]);
