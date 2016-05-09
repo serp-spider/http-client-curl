@@ -26,8 +26,9 @@ class CookieFile
         foreach ($cookies as $cookie) {
             $domain = $cookie->getDomain();
             $expire = $cookie->getExpires();
+            $httpOnly = $cookie->getHttpOnly();
             $data = [
-                $domain,
+                ($httpOnly ? '#HttpOnly_' : '' ) . $domain,
                 $domain{0} == '.' ? 'TRUE' : 'FALSE',
                 $cookie->getPath(),
                 $cookie->getSecure() ? 'TRUE' : 'FALSE',
@@ -51,6 +52,11 @@ class CookieFile
 
         $fileData = preg_split('/$\R?^/m', $fileData);
         foreach ($fileData as $cookieData) {
+            $httpOnly = false;
+            if (strncmp($cookieData, '#HttpOnly_', strlen('#HttpOnly_')) === 0) {
+                $cookieData = substr($cookieData, strlen('#HttpOnly_'));
+                $httpOnly = true;
+            }
             if (empty($cookieData) || $cookieData{0} == '#') {
                 continue;
             }
@@ -61,6 +67,7 @@ class CookieFile
                 'path'   => $cookieData[2],
                 'secure' => $cookieData[3] == true,
                 'expire' => $cookieData[4],
+                'http_only' => $httpOnly,
             ]);
         }
 
