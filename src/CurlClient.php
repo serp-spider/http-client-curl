@@ -42,6 +42,18 @@ class CurlClient implements HttpClientInterface
         if ($proxy) {
             $proxyHost = $proxy->getIp();
             $proxyPort = $proxy->getPort();
+            $proxyType = $prixy->getType();
+            switch ($proxyType) {
+                case 'SOCKS4':
+                    $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
+                    break;
+                case 'SOCKS5':
+                    $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
+                    break;
+                default:
+                    $this->client->setOPtion(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    break;
+            }
             if ($user = $proxy->getUser()) {
                 $proxyAuth = $user;
                 if ($password = $proxy->getPassword()) {
