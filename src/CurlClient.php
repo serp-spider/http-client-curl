@@ -48,7 +48,7 @@ class CurlClient implements HttpClientInterface
                     $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
                     break;
                 case 'SOCKS5':
-                    $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
+                    $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
                     break;
                 default:
                     $this->client->setOPtion(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
