@@ -42,7 +42,7 @@ class CurlClient implements HttpClientInterface
         if ($proxy) {
             $proxyHost = $proxy->getIp();
             $proxyPort = $proxy->getPort();
-            $proxyType = $prixy->getType();
+            $proxyType = $proxy->getType();
             switch ($proxyType) {
                 case 'SOCKS4':
                     $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS4);
@@ -51,7 +51,7 @@ class CurlClient implements HttpClientInterface
                     $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
                     break;
                 default:
-                    $this->client->setOPtion(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    $this->client->setOption(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
                     break;
             }
             if ($user = $proxy->getUser()) {
