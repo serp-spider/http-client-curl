@@ -13,6 +13,7 @@ use Serps\Core\Http\ProxyInterface;
 
 use Serps\Core\Http\SearchEngineResponse;
 use Serps\Core\UrlArchive;
+use Serps\HttpClient\CurlClient\CookieFile;
 use Serps\HttpClient\CurlClient\Curl;
 use Serps\HttpClient\CurlClient\ResponseBuilder;
 use Zend\Diactoros\Response;

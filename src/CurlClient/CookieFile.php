@@ -3,7 +3,7 @@
  * @license see LICENSE
  */
 
-namespace Serps\HttpClient;
+namespace Serps\HttpClient\CurlClient;
 
 use Serps\Core\Cookie\Cookie;
 
