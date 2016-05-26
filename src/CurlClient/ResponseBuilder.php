@@ -21,8 +21,7 @@ class ResponseBuilder
         $headerSize,
         UrlArchive $initialUrl,
         UrlArchive $effectiveUrl,
-        ProxyInterface $proxy = null,
-        CookieJarInterface $cookieJar = null
+        ProxyInterface $proxy = null
     ) {
     
 
@@ -50,16 +49,6 @@ class ResponseBuilder
             'status-text' => null
         ];
         self::parseHeaders($headers, $data);
-
-        if ($cookieJar && isset($data['headers']['SetCookie'])) {
-            foreach ($data['headers']['SetCookie'] as $setCookieString) {
-                $cookieJar->set(SetCookieString::parse(
-                    $setCookieString,
-                    $effectiveUrl->getHost(),
-                    $effectiveUrl->getPath()
-                ));
-            }
-        }
 
         return new SearchEngineResponse(
             $data['headers'],

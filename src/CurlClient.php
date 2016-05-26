@@ -111,8 +111,7 @@ class CurlClient implements HttpClientInterface
             $headerSize,
             $initialUrl,
             $effectiveUrl,
-            $proxy,
-            $cookieJar
+            $proxy
         );
     }
 }
