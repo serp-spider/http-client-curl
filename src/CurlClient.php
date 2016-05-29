@@ -102,4 +102,23 @@ class CurlClient implements HttpClientInterface
             $cookieJar
         );
     }
+
+    /**
+     * Set a curl option. Typically they match to CURLOPT_* constants
+     * @param $option
+     * @param $value
+     */
+    public function setOption($option, $value)
+    {
+        $this->client->setOption($option, $value);
+    }
+
+    /**
+     * Removes a curl option that was previously set with @see Curl::setOption()
+     * @param $option
+     */
+    public function removeOption($option)
+    {
+        $this->client->removeOption($option);
+    }
 }
