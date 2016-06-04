@@ -104,6 +104,8 @@ class CurlClient implements HttpClientInterface
             foreach ($cookies as $cookie) {
                 $cookieJar->set($cookie);
             }
+            unlink($cookieFile);
+            unlink($cookieJarFile);
         }
 
         return ResponseBuilder::buildResponse(
