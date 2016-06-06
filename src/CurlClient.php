@@ -33,6 +33,14 @@ class CurlClient implements HttpClientInterface
     }
 
     /**
+     * @return Curl
+     */
+    public function getCurl()
+    {
+        return $this->client;
+    }
+
+    /**
      * @inheritdoc
      */
     public function sendRequest(
