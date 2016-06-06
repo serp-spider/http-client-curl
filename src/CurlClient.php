@@ -108,7 +108,7 @@ class CurlClient implements HttpClientInterface
             $initialUrl = UrlArchive::fromString((string)$request->getUri());
             $this->client->close();
 
-            if($cookieJar){
+            if ($cookieJar) {
                 $cookieJarData = file_get_contents($cookieJarFile);
                 $cookies = CookieFile::parse($cookieJarData);
                 foreach ($cookies as $cookie) {
@@ -125,7 +125,7 @@ class CurlClient implements HttpClientInterface
             );
         } catch (\Exception $e) {
             throw $e;
-        }finally{
+        } finally {
             if ($cookieJar) {
                 unlink($cookieFile);
                 unlink($cookieJarFile);
