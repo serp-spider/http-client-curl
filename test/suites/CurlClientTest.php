@@ -45,4 +45,9 @@ class CurlClientTest extends HttpClientTestsCase
         }
 
     }
+
+    public function testGetCurl()
+    {
+        $this->assertInstanceOf(CurlClient\Curl::class, $this->getHttpClient()->getCurl());
+    }
 }

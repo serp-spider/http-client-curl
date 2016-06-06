@@ -33,6 +33,8 @@ class CurlClient implements HttpClientInterface
     }
 
     /**
+     * Get the underlying curl wrapper. Useful to manually update configuration.
+     * Be aware that some curl options will be forced be every requests.
      * @return Curl
      */
     public function getCurl()
