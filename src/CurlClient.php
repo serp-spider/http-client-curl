@@ -101,29 +101,38 @@ class CurlClient implements HttpClientInterface
             $this->client->removeOption(CURLOPT_COOKIEJAR);
         }
 
-        $rawResponse = $this->client->request($request);
-        $headerSize = $this->client->getInfo(CURLINFO_HEADER_SIZE);
-        $effectiveUrl = UrlArchive::fromString($this->client->getInfo(CURLINFO_EFFECTIVE_URL));
-        $initialUrl = UrlArchive::fromString((string)$request->getUri());
+        try {
+            $rawResponse = $this->client->request($request);
+            $headerSize = $this->client->getInfo(CURLINFO_HEADER_SIZE);
+            $effectiveUrl = UrlArchive::fromString($this->client->getInfo(CURLINFO_EFFECTIVE_URL));
+            $initialUrl = UrlArchive::fromString((string)$request->getUri());
+            $this->client->close();
 
-        $this->client->close();
-
-        if ($cookieJar) {
-            $cookieJarData = file_get_contents($cookieJarFile);
-            $cookies = CookieFile::parse($cookieJarData);
-            foreach ($cookies as $cookie) {
-                $cookieJar->set($cookie);
+            if($cookieJar){
+                $cookieJarData = file_get_contents($cookieJarFile);
+                $cookies = CookieFile::parse($cookieJarData);
+                foreach ($cookies as $cookie) {
+                    $cookieJar->set($cookie);
+                }
             }
-            unlink($cookieFile);
-            unlink($cookieJarFile);
+
+            return ResponseBuilder::buildResponse(
+                $rawResponse,
+                $headerSize,
+                $initialUrl,
+                $effectiveUrl,
+                $proxy
+            );
+        } catch (\Exception $e) {
+            throw $e;
+        }finally{
+            if ($cookieJar) {
+                unlink($cookieFile);
+                unlink($cookieJarFile);
+            }
         }
 
-        return ResponseBuilder::buildResponse(
-            $rawResponse,
-            $headerSize,
-            $initialUrl,
-            $effectiveUrl,
-            $proxy
-        );
+
+
     }
 }
