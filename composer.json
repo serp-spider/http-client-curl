@@ -44,6 +44,7 @@
     "phpunit/phpunit": "4.1.2",
     "squizlabs/php_codesniffer": "~2.5",
     "zendframework/zend-diactoros": ">=1",
-    "serps/http-client-test-suite": "*"
+    "serps/http-client-test-suite": "*",
+    "codeclimate/php-test-reporter": "^0.3.2"
   }
 }
