@@ -131,8 +131,5 @@ class CurlClient implements HttpClientInterface
                 unlink($cookieJarFile);
             }
         }
-
-
-
     }
 }

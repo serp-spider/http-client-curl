@@ -31,20 +31,22 @@ class CurlClientTest extends HttpClientTestsCase
     const FAKE_PROXY_PASSWORD = 'password';
     const FAKE_PROXY_TYPE = 'HTTP';
     const FAKE_PROXY_TYPE_CURL = CURLPROXY_HTTP;
-    
+
     public function getHttpClient()
     {
         return new CurlClient();
     }
 
-    public function getRequest() {
+    public function getRequest()
+    {
         return new Request('http://httpbin.org/get', 'GET');
     }
 
-    public function getFakeProxy() {
+    public function getFakeProxy()
+    {
         return new Proxy(self::FAKE_PROXY_HOST, self::FAKE_PROXY_PORT, self::FAKE_PROXY_USER, self::FAKE_PROXY_PASSWORD, self::FAKE_PROXY_TYPE);
     }
-    
+
     public function testCurlException()
     {
         $client = $this->getHttpClient();
@@ -56,15 +58,15 @@ class CurlClientTest extends HttpClientTestsCase
             $this->assertEquals(5, $e->getCurlErrCode());
             $this->assertNotEmpty($e->getCurlErrMessage());
         }
-
     }
 
     public function testGetCurl()
     {
         $this->assertInstanceOf(CurlClient\Curl::class, $this->getHttpClient()->getCurl());
     }
-    
-    public function testProxyConfiguration() {
+
+    public function testProxyConfiguration()
+    {
         $client = $this->getHttpClient();
 
         try {
@@ -78,8 +80,9 @@ class CurlClientTest extends HttpClientTestsCase
         }
     }
 
-    public function testProxyCreateFromStr() {
-        $str = sprintf("%s://%s:%s@%s:%d", self::FAKE_PROXY_TYPE, self::FAKE_PROXY_USER, self::FAKE_PROXY_PASSWORD, self::FAKE_PROXY_HOST, self::FAKE_PROXY_PORT);
+    public function testProxyCreateFromStr()
+    {
+        $str = sprintf('%s://%s:%s@%s:%d', self::FAKE_PROXY_TYPE, self::FAKE_PROXY_USER, self::FAKE_PROXY_PASSWORD, self::FAKE_PROXY_HOST, self::FAKE_PROXY_PORT);
         $proxy = Proxy::createFromString($str);
         $this->assertEquals(self::FAKE_PROXY_HOST, $proxy->getIp());
         $this->assertEquals(self::FAKE_PROXY_PORT, $proxy->getPort());
