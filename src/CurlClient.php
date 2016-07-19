@@ -68,7 +68,7 @@ class CurlClient implements HttpClientInterface
             if ($user = $proxy->getUser()) {
                 $proxyAuth = $user;
                 if ($password = $proxy->getPassword()) {
-                    $proxyAuth .= ':' . $proxyAuth;
+                    $proxyAuth .= ':' . $password;
                 }
             } else {
                 $proxyAuth = null;
@@ -131,8 +131,5 @@ class CurlClient implements HttpClientInterface
                 unlink($cookieJarFile);
             }
         }
-
-
-
     }
 }

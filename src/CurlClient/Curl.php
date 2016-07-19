@@ -71,6 +71,16 @@ class Curl
     }
 
     /**
+     * Get curl option. Typically they match to CURLOPT_* constants.
+     * @param $option
+     * @return mixed
+     */
+    public function getOption($option)
+    {
+        return isset($this->options[$option]) ? $this->options[$option] : null;
+    }
+
+    /**
      * Set a curl option. Typically they match to CURLOPT_* constants
      * @param $option
      * @param $value
