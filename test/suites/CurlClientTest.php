@@ -4,13 +4,7 @@
  */
 namespace Serps\Test\HttpClient;
 
-use Psr\Http\Message\ResponseInterface;
-use Serps\Core\Cookie\ArrayCookieJar;
-use Serps\Core\Cookie\Cookie;
-use Serps\Core\Http\HttpClientInterface;
 use Serps\Core\Http\Proxy;
-use Serps\Core\Http\SearchEngineResponse;
-use Serps\HttpClient\CurlClient\CookieFile;
 use Serps\HttpClient\CurlClient;
 use Zend\Diactoros\Request;
 

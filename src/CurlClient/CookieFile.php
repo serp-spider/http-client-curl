@@ -10,6 +10,8 @@ use Serps\Core\Cookie\Cookie;
 class CookieFile
 {
 
+    const HTTP_ONLY_PREFIX = '#HttpOnly_';
+
     /**
      * Generate a string for curl cookie file
      *
@@ -28,13 +30,13 @@ class CookieFile
             $expire = $cookie->getExpires();
             $httpOnly = $cookie->getHttpOnly();
             $data = [
-                ($httpOnly ? '#HttpOnly_' : '' ) . $domain,
+                ($httpOnly ? self::HTTP_ONLY_PREFIX : '' ) . $domain,
                 $domain{0} == '.' ? 'TRUE' : 'FALSE',
                 $cookie->getPath(),
                 $cookie->getSecure() ? 'TRUE' : 'FALSE',
                 $expire ? $expire : '0',
                 $cookie->getName(),
-                $cookie->getValue()
+                urlencode($cookie->getValue())
             ];
             $cookieFile[]= implode("\t", $data);
         }
@@ -53,8 +55,9 @@ class CookieFile
         $fileData = preg_split('/$\R?^/m', $fileData);
         foreach ($fileData as $cookieData) {
             $httpOnly = false;
-            if (strncmp($cookieData, '#HttpOnly_', strlen('#HttpOnly_')) === 0) {
-                $cookieData = substr($cookieData, strlen('#HttpOnly_'));
+            $prefixLength = strlen(self::HTTP_ONLY_PREFIX);
+            if (strncmp($cookieData, self::HTTP_ONLY_PREFIX, $prefixLength) === 0) {
+                $cookieData = substr($cookieData, $prefixLength);
                 $httpOnly = true;
             }
             if (empty($cookieData) || $cookieData{0} == '#') {
@@ -62,11 +65,11 @@ class CookieFile
             }
             $cookieData = trim($cookieData);
             $cookieData = explode("\t", $cookieData);
-            $cookies[] = new Cookie($cookieData[5], $cookieData[6], [
+            $cookies[] = new Cookie($cookieData[5], urldecode($cookieData[6]), [
                 'domain' => $cookieData[0],
                 'path'   => $cookieData[2],
                 'secure' => $cookieData[3] == 'TRUE',
-                'expire' => $cookieData[4],
+                'expires' => $cookieData[4],
                 'http_only' => $httpOnly,
             ]);
         }
