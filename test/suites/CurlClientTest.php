@@ -79,15 +79,4 @@ class CurlClientTest extends HttpClientTestsCase
             $this->assertEquals(self::FAKE_PROXY_TYPE_CURL, $client->getCurl()->getOption(CURLOPT_PROXYTYPE));
         }
     }
-
-    public function testProxyCreateFromStr()
-    {
-        $str = sprintf('%s://%s:%s@%s:%d', self::FAKE_PROXY_TYPE, self::FAKE_PROXY_USER, self::FAKE_PROXY_PASSWORD, self::FAKE_PROXY_HOST, self::FAKE_PROXY_PORT);
-        $proxy = Proxy::createFromString($str);
-        $this->assertEquals(self::FAKE_PROXY_HOST, $proxy->getIp());
-        $this->assertEquals(self::FAKE_PROXY_PORT, $proxy->getPort());
-        $this->assertEquals(self::FAKE_PROXY_USER, $proxy->getUser());
-        $this->assertEquals(self::FAKE_PROXY_PASSWORD, $proxy->getPassword());
-        $this->assertEquals(self::FAKE_PROXY_TYPE, $proxy->getType());
-    }
 }
