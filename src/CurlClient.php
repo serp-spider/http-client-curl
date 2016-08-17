@@ -51,7 +51,7 @@ class CurlClient implements HttpClientInterface
         CookieJarInterface $cookieJar = null
     ) {
         if ($proxy) {
-            $proxyHost = $proxy->getIp();
+            $proxyHost = $proxy->getHost();
             $proxyPort = $proxy->getPort();
             $proxyType = $proxy->getType();
             switch ($proxyType) {
