@@ -51,7 +51,7 @@ class CookieFileTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 [
-                    new Cookie('test2', "\t#$%^&!-+=/\\;\t", [
+                    new Cookie('test2', urlencode("\t#$%^&!-+=/\\;\t"), [
                         'domain'    => '.a.b.c.d.example.org',
                         'path'      => '/a/b/c/d;e',
                         'secure'    => true,
