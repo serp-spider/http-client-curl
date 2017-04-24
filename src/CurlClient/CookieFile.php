@@ -36,7 +36,7 @@ class CookieFile
                 $cookie->getSecure() ? 'TRUE' : 'FALSE',
                 $expire ? $expire : '0',
                 $cookie->getName(),
-                urlencode($cookie->getValue())
+                $cookie->getValue()
             ];
             $cookieFile[]= implode("\t", $data);
         }
@@ -65,7 +65,7 @@ class CookieFile
             }
             $cookieData = trim($cookieData);
             $cookieData = explode("\t", $cookieData);
-            $cookies[] = new Cookie($cookieData[5], urldecode($cookieData[6]), [
+            $cookies[] = new Cookie($cookieData[5], $cookieData[6], [
                 'domain' => $cookieData[0],
                 'path'   => $cookieData[2],
                 'secure' => $cookieData[3] == 'TRUE',
