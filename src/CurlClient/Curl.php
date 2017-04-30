@@ -123,6 +123,8 @@ class Curl
         }
         if ($request->getMethod() === 'HEAD') {
             $options[CURLOPT_NOBODY] = true;
+        } elseif ($request->getMethod() === 'POST') {
+            $options[CURLOPT_POST] = true;
         } elseif ($request->getMethod() !== 'GET') {
             // GET is a default method. Other methods should be specified explicitly.
             $options[CURLOPT_CUSTOMREQUEST] = $request->getMethod();
