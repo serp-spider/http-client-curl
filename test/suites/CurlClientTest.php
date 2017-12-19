@@ -4,6 +4,8 @@
  */
 namespace Serps\Test\HttpClient;
 
+use Serps\Core\Cookie\ArrayCookieJar;
+use Serps\Core\Cookie\Cookie;
 use Serps\Core\Http\Proxy;
 use Serps\HttpClient\CurlClient;
 use Zend\Diactoros\Request;
@@ -39,6 +41,21 @@ class CurlClientTest extends HttpClientTestsCase
     public function getFakeProxy()
     {
         return new Proxy(self::FAKE_PROXY_HOST, self::FAKE_PROXY_PORT, self::FAKE_PROXY_USER, self::FAKE_PROXY_PASSWORD, self::FAKE_PROXY_TYPE);
+    }
+
+    /**
+     * This test a bug that makes curl ignore last cookie if no new line is inserted at the end of cookie file
+     */
+    public function testCookieAlone()
+    {
+        $client = $this->getHttpClient();
+        $request = new Request('http://httpbin.org/cookies', 'GET');
+        $cookieJar = new ArrayCookieJar();
+        $cookieJar->set(new Cookie('bar', 'baz', ['domain' => '.httpbin.org']));
+        $response = $client->sendRequest($request, null, $cookieJar);
+        $responseData = json_decode($response->getPageContent(), true);
+        $this->assertCount(1, $responseData['cookies']);
+        $this->assertEquals(['bar' => 'baz'], $responseData['cookies']);
     }
 
     public function testCurlException()

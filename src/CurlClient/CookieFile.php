@@ -41,7 +41,7 @@ class CookieFile
             $cookieFile[]= implode("\t", $data);
         }
 
-        return implode(PHP_EOL, $cookieFile);
+        return implode(PHP_EOL, $cookieFile) . PHP_EOL;
     }
 
     /**
