@@ -47,7 +47,7 @@ class CookieFileTest extends \PHPUnit_Framework_TestCase
                         'http_only' => true
                     ])
                 ],
-                "#HttpOnly_example.org\tFALSE\t/\tTRUE\t1468951248\ttest1\tvalue1"
+                "#HttpOnly_example.org\tFALSE\t/\tTRUE\t1468951248\ttest1\tvalue1" . PHP_EOL
             ],
             [
                 [
@@ -59,7 +59,7 @@ class CookieFileTest extends \PHPUnit_Framework_TestCase
                         'http_only' => false
                     ])
                 ],
-                ".a.b.c.d.example.org\tTRUE\t/a/b/c/d;e\tTRUE\t1468951248\ttest2\t%09%23%24%25%5E%26%21-%2B%3D%2F%5C%3B%09"
+                ".a.b.c.d.example.org\tTRUE\t/a/b/c/d;e\tTRUE\t1468951248\ttest2\t%09%23%24%25%5E%26%21-%2B%3D%2F%5C%3B%09" . PHP_EOL
             ],
         ];
     }
