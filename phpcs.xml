@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="gsouf">
+<ruleset name="Serps">
 
     <file>./src/</file>
     <file>./test/suites</file>
@@ -7,7 +7,7 @@
     <!--The complete PSR-2 ruleset-->
     <rule ref="PSR2"/>
 
-    <!-- Arrays -->
+    <!-- Short array only -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
 
@@ -15,6 +15,7 @@
     <rule ref="Generic.Files.LineLength.TooLong">
         <exclude-pattern>./test/*</exclude-pattern>
     </rule>
+
     <!-- When test method have weird signatures -->
     <rule ref="PEAR.Functions.ValidDefaultValue.NotAtEnd">
         <exclude-pattern>./test/*</exclude-pattern>
@@ -31,6 +32,5 @@
             <property name="forbiddenFunctions" type="array" value="var_dump=>null,sizeof=>count,delete=>unset,print=>echo"/>
         </properties>
     </rule>
-
 
 </ruleset>
