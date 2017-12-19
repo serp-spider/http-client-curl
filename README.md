@@ -19,3 +19,9 @@ Documentation
 -------------
 
 [Browse the documentation](http://serp-spider.github.io/documentation/http-client/curl/)
+
+
+Requirement
+-----------
+
+We recommend using curl version 7.48 or above. 
