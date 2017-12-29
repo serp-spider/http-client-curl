@@ -60,6 +60,9 @@ class CookieFile
                 $cookieData = substr($cookieData, $prefixLength);
                 $httpOnly = true;
             }
+
+            $cookieData = trim($cookieData);
+
             if (empty($cookieData) || $cookieData{0} == '#') {
                 continue;
             }

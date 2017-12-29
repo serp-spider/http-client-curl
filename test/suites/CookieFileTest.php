@@ -63,4 +63,12 @@ class CookieFileTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    public function testCookieFileWhitespaces()
+    {
+        $cookiesData = ' ' . PHP_EOL;
+        $cookies = CookieFile::parse($cookiesData);
+
+        $this->assertEquals([], $cookies);
+    }
 }
